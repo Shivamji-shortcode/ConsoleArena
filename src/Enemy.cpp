@@ -29,5 +29,5 @@ void Enemy::takeDamage(int damage){
         actualdamage = 0;
     }
     this->hp -= actualdamage;
-    std::cout<<"Enemy took "<< actualdamage << " damage! "<<std::endl;
+    
 }

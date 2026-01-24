@@ -17,5 +17,8 @@ class Player{
 
     //Functions;
     void printStats();
+    bool isAlive();
+    int getDamage();
+    void takeDamage(int damage);
 
 };

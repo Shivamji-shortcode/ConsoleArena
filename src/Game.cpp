@@ -1,5 +1,5 @@
 #include "../include/Game.h"
-// Constructo : Intialize Variables
+// Constructor : Intialize Variables
 Game::Game(){
 
     this->playing = true;
@@ -18,6 +18,7 @@ void Game::mainMenu() {
     std::cout << "1. Create Player" << std::endl;
     std::cout << "2. Spawn Enemies (Debug)" << std::endl; // <--- New Option
     std::cout << "3. Show Enemies (Debug)" << std::endl;  // <--- New Option
+    std::cout << "4. Fight First Enemy (Debug)" << std::endl;
     std::cout << "0. Exit" << std::endl;
     std::cout << "Choice: ";
     
@@ -34,13 +35,11 @@ void Game::mainMenu() {
             std::cout << "Enter Name: ";
             std::string name;
             std::cin >> name;
-
             // DYNAMIC ALLOCATION: Create the player on the Heap
             if (this->player != nullptr) { 
                 delete this->player; // Safety: delete old player if one exists
             }
             this->player = new Player(name);
-
             // Prove it worked
             this->player->printStats();
             break;
@@ -50,6 +49,18 @@ void Game::mainMenu() {
             break;
         case 3: // <--- New Logic for Printing
             this->printEnemies(); // Loops through vector and prints stats
+            break;
+        case 4: // Fight logic
+            // Check if there are enemies left to fight
+            if (!this->enemies.empty())
+            {
+                //Fight the first enemy(Index 0)
+                this->combat(this->enemies[0]);
+            }
+            else
+            {
+                std::cout<<" No Enemies too fight! spawn them first. "<<std::endl;
+            }
             break;
         default:
             break;
@@ -68,7 +79,6 @@ void Game::spawnEnemies(int count){
 }
 void Game::printEnemies(){
     std::cout<<"-----CURRENT ENEMIES-----" <<std::endl;
-
     // e is a reference to each enemy inside the vector;
     int index = 0;
     for(auto& e : this->enemies){
@@ -76,4 +86,41 @@ void Game::printEnemies(){
         index++;
     }
     std::cout<<"----------------" <<std::endl;
+}
+void Game::combat(Enemy& enemy){
+    // Start the battle loop 
+    // We fight as long as Player and enemy are both alive
+    while (this->player->isAlive() && enemy.isAlive())
+    {
+        std::cout<<"\n---Battle---"<<std::endl;
+        std::cout<<"Player Hp: "<<this->player->isAlive()<<std::endl;
+        std::cout<<"Enemy: "<<enemy.getStatus()<<std::endl;
+
+        std::cout<<"1. Attack" <<std::endl;
+        std::cout<<"2. Heal" <<std::endl;
+        std::cout<<"Choice: ";
+        int Choice;
+        std::cin>>Choice;
+        //Switch case 
+        switch (Choice)
+        {
+        case 1:
+            //attack
+            enemy.takeDamage(this->player->getDamage());
+            break;
+        case 2:
+            // heal
+            std::cout<<"You braced yourself! "<<std::endl;
+            break;
+        default:
+            break;
+        }
+        // Enemy turn(counter- attack)
+        if (enemy.isAlive())
+        {
+            std::cout<<"Enemy attacks back! "<<std::endl;
+            //Now this works too
+            this->player->takeDamage(enemy.getDamage());
+        }   
+    }
 }
