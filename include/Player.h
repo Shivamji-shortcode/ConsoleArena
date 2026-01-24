@@ -19,6 +19,8 @@ class Player{
     void printStats();
     bool isAlive();
     int getDamage();
+    int getHp();
+    void heal(int amount);
     void takeDamage(int damage);
 
 };

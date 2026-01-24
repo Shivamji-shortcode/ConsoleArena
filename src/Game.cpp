@@ -56,6 +56,12 @@ void Game::mainMenu() {
             {
                 //Fight the first enemy(Index 0)
                 this->combat(this->enemies[0]);
+                // if the we just fought is dead
+                if (!this->enemies[0].isAlive())
+                {
+                    this->enemies.erase(this->enemies.begin());
+                    std::cout<<"The enemy has been removed from the list."<<std::endl;
+                }
             }
             else
             {
@@ -93,7 +99,7 @@ void Game::combat(Enemy& enemy){
     while (this->player->isAlive() && enemy.isAlive())
     {
         std::cout<<"\n---Battle---"<<std::endl;
-        std::cout<<"Player Hp: "<<this->player->isAlive()<<std::endl;
+        std::cout<<"Player Hp: "<<this->player->getHp()<<std::endl;
         std::cout<<"Enemy: "<<enemy.getStatus()<<std::endl;
 
         std::cout<<"1. Attack" <<std::endl;
@@ -122,5 +128,15 @@ void Game::combat(Enemy& enemy){
             //Now this works too
             this->player->takeDamage(enemy.getDamage());
         }   
+    }
+    if (this->player->isAlive())
+    {
+        std::cout<<"\n---VICTORY---"<<std::endl;
+        std::cout<<"You defeated the "<<enemy.getStatus()<<" enemy!"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"\n----Game over----"<<std::endl;
+        std::cout<<"You have lost the battle...."<<std::endl;
     }
 }

@@ -32,3 +32,12 @@ void Player::takeDamage(int dmage){
     }
     std::cout<<"You took "<< damage << " damage!"<<std::endl;
 }
+int Player::getHp(){
+    return this->hp;
+}
+void Player::heal(int amount){
+    this->hp += amount;
+    if(this->hp > this->hpMax){
+        this->hp = this->hpMax;
+    }
+}

@@ -29,5 +29,16 @@ void Enemy::takeDamage(int damage){
         actualdamage = 0;
     }
     this->hp -= actualdamage;
+    if (this->hp <= 0)
+    {
+        this->hp = 0; // Keeps hp to 0 not in minus representation;
+        std::cout<<" You dealt "<<actualdamage<<" damage "<<std::endl;
+        std::cout<<" -> The enemy has been DEFEATED! Congrats."<<std::endl;
+    }
+    else
+    {
+        std::cout<<" You dealt "<<actualdamage<<" damage. "<<std::endl;
+        std::cout<<" -> Enemy HP: "<<this->hp<<"/"<<this->hpMax<<std::endl;
+    }
     
 }
