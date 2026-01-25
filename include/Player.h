@@ -9,6 +9,9 @@ class Player{
         int hp;
         int hpMax;
         int damage;
+        int exp;
+        int expNext;
+        int level;
     public:
     //constructor take a name for the character
 
@@ -20,7 +23,8 @@ class Player{
     bool isAlive();
     int getDamage();
     int getHp();
+    int getLevel();
     void heal(int amount);
     void takeDamage(int damage);
-
+    void gainExp(int exp);
 };

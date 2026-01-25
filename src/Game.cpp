@@ -1,4 +1,5 @@
 #include "../include/Game.h"
+#include<ctime> // we need this fot the random numbers;
 // Constructor : Intialize Variables
 Game::Game(){
 
@@ -51,6 +52,12 @@ void Game::mainMenu() {
             this->printEnemies(); // Loops through vector and prints stats
             break;
         case 4: // Fight logic
+            //security check that if the player rellly exist that user created the palyer or not if not he shloud create the player first;
+            if (this->player == nullptr)
+            {
+                std::cout<<" Error! You must create player first(Option 1), because you have not created one"<<std::endl;
+            }
+            
             // Check if there are enemies left to fight
             if (!this->enemies.empty())
             {
@@ -75,13 +82,13 @@ void Game::mainMenu() {
 bool Game::getPlaying() const{
     return this->playing;
 }
-void Game::spawnEnemies(int count){
-    for(int i = 0; i < count; i++){
+void Game::spawnEnemies(int amount){
+    for(int i = 0; i < amount; i++){
         //create a new enemy level(Level 1 for now)
         //push_back adds it to the end of the vector
-        this->enemies.push_back(Enemy(1));
+        this->enemies.push_back(Enemy(this->player->getLevel()));
     }
-    std::cout<<"Spawned "<<count<<" enemies! " <<std::endl;
+    std::cout << "Spawned " << amount << " enemies at Level " << this->player->getLevel() << "!" << std::endl;
 }
 void Game::printEnemies(){
     std::cout<<"-----CURRENT ENEMIES-----" <<std::endl;
@@ -115,9 +122,13 @@ void Game::combat(Enemy& enemy){
             enemy.takeDamage(this->player->getDamage());
             break;
         case 2:
+        {
             // heal
-            std::cout<<"You braced yourself! "<<std::endl;
+            //rand()%21 geerates 0-20. + 10 makes it 10-30;
+            int healAmount = rand() % 21 + 10;
+            this->player->heal(healAmount);
             break;
+        }    
         default:
             break;
         }
@@ -127,12 +138,22 @@ void Game::combat(Enemy& enemy){
             std::cout<<"Enemy attacks back! "<<std::endl;
             //Now this works too
             this->player->takeDamage(enemy.getDamage());
+            //--New check --
+            if(!this->player->isAlive()){
+
+                std::cout<<" You collapsed from the damage! Ohhhh! "<<std::endl;
+                break; // forced the loop to end immidiately;
+            }
         }   
     }
     if (this->player->isAlive())
     {
         std::cout<<"\n---VICTORY---"<<std::endl;
         std::cout<<"You defeated the "<<enemy.getStatus()<<" enemy!"<<std::endl;
+        // --- Reward the player --- //
+        this->player->gainExp(10);
+        // -----------------------//
+        std::cout<<"------------------\n"<<std::endl;
     }
     else
     {

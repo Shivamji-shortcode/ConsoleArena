@@ -2,9 +2,9 @@
 
 Enemy::Enemy(int level){
     this->level = level;
-    this->hpMax = level*10; //Level 1 = level 10 hp; level 5 = 50 hp;
+    this->hpMax = 10 + (level*10); //Level 1 = level 10 hp; level 5 = 50 hp;
     this->hp = this->hpMax;
-    this->damage = level*2; // level 1 = 2 damage
+    this->damage = 2 + (level*4); // level 1 = 2 damage
     this->defense = level*1;
 }
 
