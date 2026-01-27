@@ -65,11 +65,45 @@ void Player::gainExp(int exp){
         this->level++;
         this->expNext += 50;    // Next level is harder (100 - > 150 - > 200)
         //Reward : star increase;
-        this->hpMax += 20;
-        this->damage += 5;
-        this->hp = this->hpMax;     // Full heal on level up;
-        std::cout<<"Level UP! You are no level "<<this->level<<"!"<<std::endl;
-        std::cout<<"Stats Increased: HP -> "<<hpMax<<" | Dmg -> "<<this->damage<<std::endl;
+        // this->hpMax += 20;
+        // this->damage += 5;
+        // this->hp = this->hpMax;     // Full heal on level up;
+        // std::cout<<"Level UP! You are no level "<<this->level<<"!"<<std::endl;
+        // std::cout<<"Stats Increased: HP -> "<<hpMax<<" | Dmg -> "<<this->damage<<std::endl;    Previous code now upgrading the code;
+        system("cls");
+        std::cout<<"==================="<<std::endl;
+        std::cout<<"Level UP! You are at level "<<this->level<<std::endl;
+        std::cout<<"You have 1 skill point"<<std::endl;
+        std::cout<<"1. Strength(+5 damage)"<<std::endl;
+        std::cout<<"2. Vitality(+20 MaxHp)"<<std::endl;
+        std::cout<<"3. Full Heal only(Save Point)"<<std::endl;
+        std::cout<<"Chosse Your Upgrade !!!!!!"<<std::endl;
+        int choice;
+        std::cin>>choice;
+        //Applying the upgrade--------------
+        if (choice == 1)
+        {
+            this->damage += 5;
+            std::cout<<"Nice Choice, You feel Stronger got, +5 damages! Yahoooooo!"<<std::endl;
+        }
+        else if (choice == 2)
+        {
+            this->hpMax += 20;
+            std::cout<<"Woww, You feel Stronger and tougher got +20 max Hp, Yahooooo!"<<std::endl;
+        }
+        else
+        {
+            std::cout<<"Not bad, You chhose to Just heal up.hahahahaha!"<<std::endl;
+        }
+        // Always heal up the full on next level or level up;
+        this->hp = this->hpMax;
+        std::cout<<"-> Healt Fully Recovered to "<<hpMax<<" !"<<std::endl;
+        // Pause so you can actually see the result;
+        std::cout<<"Press enter to continue! "<<std::endl;
+        std::cin.ignore();
+        std::cin.get();
+        
+        
     }
 }
 int Player::getLevel() {
