@@ -29,7 +29,7 @@ bool Player::isAlive(){
 int Player::getDamage(){
     return this->damage;
 }
-void Player::takeDamage(int dmage){
+void Player::takeDamage(int damage){
     this->hp -=damage;
     if (this->hp < 0)
     {

@@ -118,9 +118,18 @@ void Game::combat(Enemy& enemy){
         switch (Choice)
         {
         case 1:
+        {
             //attack
-            enemy.takeDamage(this->player->getDamage());
+            int damage = this->player->getDamage();
+            if ((rand() % 100) < 20)
+            {
+                damage =    damage*2;
+                std::cout<<"Critical hit";
+            }
+            // Apply the potentially doubled damge
+            enemy.takeDamage(damage);
             break;
+        }           
         case 2:
         {
             // heal
@@ -136,14 +145,20 @@ void Game::combat(Enemy& enemy){
         if (enemy.isAlive())
         {
             std::cout<<"Enemy attacks back! "<<std::endl;
-            //Now this works too
-            this->player->takeDamage(enemy.getDamage());
-            //--New check --
-            if(!this->player->isAlive()){
-
-                std::cout<<" You collapsed from the damage! Ohhhh! "<<std::endl;
-                break; // forced the loop to end immidiately;
+            int enemyDmg = enemy.getDamage();
+            // Crit Roll : 20% chance for enemy too
+            if ((rand() % 100) < 20)
+            {
+                enemyDmg = enemyDmg*2;
+                std::cout<<"Enemy landed a critical hit"<<std::endl;
             }
+            this->player->takeDamage(enemyDmg);
+            //safety check;
+            if(!this->player->isAlive())
+            {
+                std::cout<<"You collapsed from the damage! "<<std::endl;
+                break;
+            } 
         }   
     }
     if (this->player->isAlive())
@@ -151,7 +166,7 @@ void Game::combat(Enemy& enemy){
         std::cout<<"\n---VICTORY---"<<std::endl;
         std::cout<<"You defeated the "<<enemy.getStatus()<<" enemy!"<<std::endl;
         // --- Reward the player --- //
-        this->player->gainExp(10);
+        this->player->gainExp(40);
         // -----------------------//
         std::cout<<"------------------\n"<<std::endl;
     }
