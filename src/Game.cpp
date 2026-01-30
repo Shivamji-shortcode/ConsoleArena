@@ -14,18 +14,27 @@ Game::~Game(){
         delete this->player;
     }
 }
-//Logic show the menu
+//-----------------------------------------------------Logic show the Main Menu-----------------------------------------------------------------
 void Game::mainMenu() {
     std::cout << "--- MAIN MENU ---" << std::endl;
+    Sleep(100);
     std::cout << "1. Create Player" << std::endl;
+    Sleep(100);
     std::cout << "2. Spawn Enemies (Debug)" << std::endl; // <--- New Option
+    Sleep(100);
     std::cout << "3. Show Enemies (Debug)" << std::endl;  // <--- New Option
+    Sleep(100);
     std::cout << "4. Fight First Enemy (Debug)" << std::endl;
+    Sleep(100);
     std::cout << "5. Visit Shop" << std::endl;
+    Sleep(100);
     std::cout << "6. Show Player's Stats" << std::endl;
+    Sleep(100);
     std::cout << "0. Exit" << std::endl;
+    Sleep(100);
     std::cout << "Choice: ";
-    
+    Sleep(100);
+
     int choice;
     std::cin >> choice;
     Sleep(300);
@@ -97,6 +106,16 @@ void Game::mainMenu() {
                 std::cout<<" No Enemies too fight! spawn them first. "<<std::endl;
             }
             break;
+        case 5:     // ----------------------------------------------Shop Menu--------------------------------------------------
+            if (this->player == nullptr)
+            {
+                std::cout<<"Create a Character First! "<<std::endl;     
+            }
+            else
+            {
+                this->shopMenu();   // Jump to the shop menu;
+            }
+            break;
         default:
             break;
     }
@@ -126,6 +145,7 @@ void Game::printEnemies(){
     }
     std::cout<<"----------------" <<std::endl;
 }
+// --------------------------------------------------------Combat Function ----------------------------------------------------------
 void Game::combat(Enemy& enemy){
     // Start the battle loop 
     // We fight as long as Player and enemy are both alive
@@ -204,6 +224,7 @@ void Game::combat(Enemy& enemy){
     {
         std::cout<<"\n---VICTORY---"<<std::endl;
         std::cout<<"You defeated the "<<enemy.getStatus()<<" enemy!"<<std::endl;
+        Sleep(100);
         // --- Reward the player --- //
         this->player->gainExp(40);
         // Gold Reward (Random 10-20 gold per kill)
@@ -214,7 +235,82 @@ void Game::combat(Enemy& enemy){
     }
     else
     {
+        Sleep(100);
         std::cout<<"\n----Game over----"<<std::endl;
+        Sleep(100);
         std::cout<<"You have lost the battle...."<<std::endl;
+        Sleep(100);
+    }
+}
+void Game::shopMenu(){
+    bool shopping = true;
+    while (shopping)
+    {
+        system("cls");
+        std::cout<<"-------Town Shop--------"<<std::endl;
+        Sleep(100);
+        std::cout<<"Your Gold: "<<this->player->getGold()<< std::endl;
+        Sleep(100);
+        std::cout<<"------------------"<<std::endl;
+        std::cout<<"1. Rest at Inn (Full Heal) - (10 gold))"<<std::endl;
+        Sleep(100);
+        std::cout<<"2. sharpen Sword (+2 damage) - (50 Gold)"<<std::endl;
+        Sleep(100);
+        std::cout<<"3. Buy Heavy Armor (+10 Hp) - (50 Gold)"<<std::endl;
+        Sleep(100);
+        std::cout<<"4. Leave Shop. "<<std::endl;
+        Sleep(50);
+        std::cout<<"Chooice: ";
+        int choice;
+        std::cin>>choice;
+        Sleep(300);     // Processing Delay;   
+
+        switch (choice)
+        {
+        case 1:
+            if (this->player->getGold() >= 10)
+            {
+                this->player->payGold(10);
+                this->player->healMax();    // we need to addd this function in the player class ------------------
+                Sleep(1000);
+            }
+            break;
+        case 2:     // Damage upgrade 
+            if (this->player->getGold() >= 50)
+            {
+                this->player->payGold(50);
+                // We need a way to upgrade stats directly;
+                this->player->upgradeStat(0, 2);       // We also need to add this function ---------------
+                Sleep(1000);
+            }
+            else
+            {
+                std::cout<<"Too Expensive You need 50 gold! "<<std::endl;
+                Sleep(1000);
+            }
+            break;
+        case 3:     // HP upgrade---------------
+            if (this->player->getGold() >= 50)
+            {
+                this->player->payGold(50);
+                this->player->upgradeStat(10, 0);      // +10 hp, 0 dmg;
+                Sleep(1000);
+            }
+            else
+            {
+                std::cout<<"Too Expensive you need 50 gold!"<<std::endl;
+                Sleep(1000);
+            }
+            break;
+        case 4:     //Exit
+            shopping = false;
+            std::cout<<"Come Back Soon...."<<std::endl;
+            Sleep(800);
+            break;
+        default:
+            std::cout<<"Invalid choice!"<<std::endl;
+            Sleep(500);
+            break;
+        }
     }
 }

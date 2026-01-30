@@ -31,5 +31,7 @@ class Player{
     int getGold();
     void gainGold(int amount);
     void payGold(int amount);
+    void healMax();
+    void upgradeStat(int hp, int dmg);
 
 };

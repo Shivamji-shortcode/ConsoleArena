@@ -20,6 +20,7 @@ class Game{
 
     //Functions
     void mainMenu();
+    void shopMenu();
     void spawnEnemies(int count);
     void printEnemies();
     void combat(Enemy& enemy);      // We pass  by reference so that damage persists after the fight

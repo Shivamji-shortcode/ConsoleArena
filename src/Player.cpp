@@ -63,8 +63,10 @@ void Player::heal(int amount){
     // calculate actually how we trully heal;
     int trueHeal = this->hp - originalHp;
     std::cout<<" You healed for "<< trueHeal <<" HP! "<<std::endl;
+    Sleep(100);
     // Optional : print Print the status so you can see the 100/100
     std::cout<<" Current HP! "<< this->hp <<"/"<<this->hpMax<<std::endl;
+    Sleep(100);
 }
 void Player::gainExp(int exp){
     this->exp +=exp;
@@ -82,13 +84,21 @@ void Player::gainExp(int exp){
         // std::cout<<"Level UP! You are no level "<<this->level<<"!"<<std::endl;
         // std::cout<<"Stats Increased: HP -> "<<hpMax<<" | Dmg -> "<<this->damage<<std::endl;    Previous code now upgrading the code;
         system("cls");
+        Sleep(1000);
         std::cout<<"==================="<<std::endl;
+        Sleep(100);
         std::cout<<"Level UP! You are at level "<<this->level<<std::endl;
+        Sleep(100);
         std::cout<<"You have 1 skill point"<<std::endl;
+        Sleep(100);
         std::cout<<"1. Strength(+5 damage)"<<std::endl;
+        Sleep(100);
         std::cout<<"2. Vitality(+20 MaxHp)"<<std::endl;
+        Sleep(100);
         std::cout<<"3. Full Heal only(Save Point)"<<std::endl;
+        Sleep(100);
         std::cout<<"Chosse Your Upgrade !!!!!!"<<std::endl;
+        Sleep(100);
         int choice;
         std::cin>>choice;
         //Applying the upgrade--------------
@@ -124,8 +134,23 @@ int Player::getGold(){
 void Player::gainGold(int amount){
     this->gold += amount;
     std::cout<<"you found "<<amount <<" Gold! "<<std::endl;
+    Sleep(100);
 }
 void Player::payGold(int amount){
     this->gold -= amount;
     std::cout<<"You paid "<<amount <<"Gold! "<<std::endl;
+    Sleep(100);
+}
+void Player::healMax(){
+    this->hp = this->hpMax;
+    std::cout<<"You have taken rest HP restored to "<< this->hp <<"!"<<std::endl;
+    Sleep(1000);
+}
+void Player::upgradeStat(int hp, int dmg){
+    this->hp += hp;
+    this->damage += dmg;
+    this->hp = this->hpMax;     // Optional : heal when upgraded HP
+    std::cout<<" UGRADE SUCCESSFUL!"<<std::endl;
+    std::cout<<"New Max HP: "<< this->hpMax <<" | New Damage: "<< this->damage <<std::endl;
+    Sleep(1000);
 }
