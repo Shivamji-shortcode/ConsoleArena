@@ -106,11 +106,15 @@ bool Game::getPlaying() const{
 }
 void Game::spawnEnemies(int amount){
     for(int i = 0; i < amount; i++){
+        Sleep(300);
         //create a new enemy level(Level 1 for now)
         //push_back adds it to the end of the vector
         this->enemies.push_back(Enemy(this->player->getLevel()));
+        std::cout<<"Entity "<< i+1 <<" materialized...."<<std::endl;
     }
+    Sleep(500);
     std::cout << "Spawned " << amount << " enemies at Level " << this->player->getLevel() << "!" << std::endl;
+    Sleep(1200);
 }
 void Game::printEnemies(){
     std::cout<<"-----CURRENT ENEMIES-----" <<std::endl;
@@ -128,11 +132,15 @@ void Game::combat(Enemy& enemy){
     while (this->player->isAlive() && enemy.isAlive())
     {
         std::cout<<"\n---Battle---"<<std::endl;
+        Sleep(100);
         std::cout<<"Player Hp: "<<this->player->getHp()<<std::endl;
+        Sleep(100);
         std::cout<<"Enemy: "<<enemy.getStatus()<<std::endl;
-
+        Sleep(100);
         std::cout<<"1. Attack" <<std::endl;
+        Sleep(50);
         std::cout<<"2. Heal" <<std::endl;
+        Sleep(50);
         std::cout<<"Choice: ";
         int Choice;
         std::cin>>Choice;

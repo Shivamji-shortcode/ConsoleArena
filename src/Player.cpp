@@ -18,13 +18,21 @@ Player::~Player(){
 
 void Player::printStats(){
     std::cout<<"--- Player States ----"<<std::endl;
+    Sleep(100);
     std::cout<<"Name: "<<this->name<<std::endl;
+    Sleep(100);
     std::cout<<"level: "<<this->level<<std::endl;
+    Sleep(100);
     std::cout<<"Hp: "<<this->hp<<std::endl;
+    Sleep(100);
     std::cout<<"Exp: "<<this->exp<<std::endl;
+    Sleep(100);
     std::cout<<"Damage: "<<this->damage<<std::endl;
+    Sleep(100);
     std::cout<<"Gold: "<<this->gold<<" G"<<std::endl; // added the gold gain line;
+    Sleep(100);
     std::cout<<"-----------------"<<std::endl;  
+    Sleep(300);
 }
 bool Player::isAlive(){
     return this->hp > 0;
