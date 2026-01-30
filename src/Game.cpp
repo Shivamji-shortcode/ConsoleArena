@@ -1,4 +1,5 @@
 #include "../include/Game.h"
+#include <windows.h>        // Allows the program to sleep (pause)
 #include<ctime> // we need this fot the random numbers;
 // Constructor : Intialize Variables
 Game::Game(){
@@ -20,31 +21,52 @@ void Game::mainMenu() {
     std::cout << "2. Spawn Enemies (Debug)" << std::endl; // <--- New Option
     std::cout << "3. Show Enemies (Debug)" << std::endl;  // <--- New Option
     std::cout << "4. Fight First Enemy (Debug)" << std::endl;
+    std::cout << "5. Visit Shop" << std::endl;
+    std::cout << "6. Show Player's Stats" << std::endl;
     std::cout << "0. Exit" << std::endl;
     std::cout << "Choice: ";
     
     int choice;
     std::cin >> choice;
+    Sleep(300);
 
     switch (choice) {
         case 0:
             this->playing = false;
+            Sleep(100);
             break;
-        case 1:
-        {
-            // Ask for name
-            std::cout << "Enter Name: ";
-            std::string name;
-            std::cin >> name;
-            // DYNAMIC ALLOCATION: Create the player on the Heap
-            if (this->player != nullptr) { 
-                delete this->player; // Safety: delete old player if one exists
+        case 6:{        // Show staes;
+            if (this->player != nullptr)
+            {
+                this->player->printStats();
             }
-            this->player = new Player(name);
-            // Prove it worked
-            this->player->printStats();
+            else
+            {
+                std::cout<<"Create a Player first! "<<std::endl;
+            }
             break;
         }
+            case 1:
+            {
+                // Ask for name
+                std::cout << "Enter Name: ";
+                std::string name;
+                std::cin >> name;
+                // DYNAMIC ALLOCATION: Create the player on the Heap
+                if (this->player != nullptr) { 
+                    delete this->player; // Safety: delete old player if one exists
+                }
+                this->player = new Player(name);
+                // -----------------------------------------Cinematic  Delays Windows version-----------------------------------------//
+                std::cout<<"\n Creating Character!!!!!!....."<<std::endl;
+                Sleep(1000);
+                std::cout<<"Loading world asset...."<<std::endl;
+                Sleep(1000);
+                std::cout<<"Welcome, "<< name<<"! "  <<std::endl;
+                // Prove it worked
+                this->player->printStats();
+                break;
+            }
         case 2: // <--- New Logic for Spawning
             this->spawnEnemies(3); // Adds 3 enemies to the vector
             break;
@@ -114,6 +136,7 @@ void Game::combat(Enemy& enemy){
         std::cout<<"Choice: ";
         int Choice;
         std::cin>>Choice;
+        Sleep(200);
         //Switch case 
         switch (Choice)
         {
@@ -125,9 +148,11 @@ void Game::combat(Enemy& enemy){
             {
                 damage =    damage*2;
                 std::cout<<"Critical hit";
+                Sleep(200);
             }
             // Apply the potentially doubled damge
             enemy.takeDamage(damage);
+            Sleep(200);
             break;
         }           
         case 2:
@@ -136,6 +161,7 @@ void Game::combat(Enemy& enemy){
             //rand()%21 geerates 0-20. + 10 makes it 10-30;
             int healAmount = rand() % 21 + 10;
             this->player->heal(healAmount);
+            Sleep(500);
             break;
         }    
         default:
@@ -144,6 +170,9 @@ void Game::combat(Enemy& enemy){
         // Enemy turn(counter- attack)
         if (enemy.isAlive())
         {
+            // Pause for the Suspese before the enemy attackks;
+            std::cout<<"\n Enemy is preapring to attack......."<<std::endl;
+            Sleep(200);
             std::cout<<"Enemy attacks back! "<<std::endl;
             int enemyDmg = enemy.getDamage();
             // Crit Roll : 20% chance for enemy too
@@ -151,8 +180,10 @@ void Game::combat(Enemy& enemy){
             {
                 enemyDmg = enemyDmg*2;
                 std::cout<<"Enemy landed a critical hit"<<std::endl;
+                Sleep(200);
             }
             this->player->takeDamage(enemyDmg);
+            Sleep(400);
             //safety check;
             if(!this->player->isAlive())
             {
@@ -167,6 +198,9 @@ void Game::combat(Enemy& enemy){
         std::cout<<"You defeated the "<<enemy.getStatus()<<" enemy!"<<std::endl;
         // --- Reward the player --- //
         this->player->gainExp(40);
+        // Gold Reward (Random 10-20 gold per kill)
+        int golddrop = rand() % 11 +10;
+        this->player->gainGold(golddrop);
         // -----------------------//
         std::cout<<"------------------\n"<<std::endl;
     }

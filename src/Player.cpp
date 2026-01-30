@@ -1,4 +1,5 @@
 #include "../include/Player.h"
+#include <windows.h>
 
 Player::Player(std:: string name){
     this->name = name;
@@ -8,6 +9,7 @@ Player::Player(std:: string name){
     this->level = 1;
     this->exp = 0;
     this->expNext = 100; // need the 100 Exp to reach next level like form level 1 to 2;
+    this->gold = 0;         // Start Poor hahahahahah;
 }
 
 Player::~Player(){
@@ -21,6 +23,7 @@ void Player::printStats(){
     std::cout<<"Hp: "<<this->hp<<std::endl;
     std::cout<<"Exp: "<<this->exp<<std::endl;
     std::cout<<"Damage: "<<this->damage<<std::endl;
+    std::cout<<"Gold: "<<this->gold<<" G"<<std::endl; // added the gold gain line;
     std::cout<<"-----------------"<<std::endl;  
 }
 bool Player::isAlive(){
@@ -57,7 +60,7 @@ void Player::heal(int amount){
 }
 void Player::gainExp(int exp){
     this->exp +=exp;
-    std::cout<<" You gained "<< exp <<"XP!"<<std::endl;
+    std::cout<<" You gained "<< exp <<" XP!"<<std::endl;
     // level up check;
     while (this->exp >= this->expNext)
     {
@@ -102,10 +105,19 @@ void Player::gainExp(int exp){
         std::cout<<"Press enter to continue! "<<std::endl;
         std::cin.ignore();
         std::cin.get();
-        
-        
     }
 }
 int Player::getLevel() {
     return this->level;
+}
+int Player::getGold(){
+    return this->gold;
+}
+void Player::gainGold(int amount){
+    this->gold += amount;
+    std::cout<<"you found "<<amount <<" Gold! "<<std::endl;
+}
+void Player::payGold(int amount){
+    this->gold -= amount;
+    std::cout<<"You paid "<<amount <<"Gold! "<<std::endl;
 }

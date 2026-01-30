@@ -12,6 +12,7 @@ class Player{
         int exp;
         int expNext;
         int level;
+        int gold;
     public:
     //constructor take a name for the character
 
@@ -27,4 +28,8 @@ class Player{
     void heal(int amount);
     void takeDamage(int damage);
     void gainExp(int exp);
+    int getGold();
+    void gainGold(int amount);
+    void payGold(int amount);
+
 };
