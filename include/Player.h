@@ -1,6 +1,9 @@
 #pragma once   
 #include <string>
 #include<iostream>
+#include <fstream>      // Allows reading/writing files
+
+
 
 class Player{
 
@@ -13,6 +16,7 @@ class Player{
         int expNext;
         int level;
         int gold;
+        int potions;
     public:
     //constructor take a name for the character
 
@@ -33,5 +37,10 @@ class Player{
     void payGold(int amount);
     void healMax();
     void upgradeStat(int hp, int dmg);
+    int getPotions();
+    void gainPotion(int amount);
+    void consumePotion();
+    void saveCharacter();
+    void loadCharacter();
 
 };

@@ -9,13 +9,14 @@ Player::Player(std:: string name){
     this->level = 1;
     this->exp = 0;
     this->expNext = 100; // need the 100 Exp to reach next level like form level 1 to 2;
-    this->gold = 0;         // Start Poor hahahahahah;
+    this->gold = 0;  // Start Poor hahahahahah;
+    this->potions = 1;       
 }
 
 Player::~Player(){
     // Empty for now
 }
-
+//-------------------------------------------------Player Stats---------------------------------------------------------------------
 void Player::printStats(){
     std::cout<<"--- Player States ----"<<std::endl;
     Sleep(100);
@@ -31,16 +32,18 @@ void Player::printStats(){
     Sleep(100);
     std::cout<<"Gold: "<<this->gold<<" G"<<std::endl; // added the gold gain line;
     Sleep(100);
+    std::cout<<"Potions: "<<this->potions<<" G"<<std::endl;
+    Sleep(100);
     std::cout<<"-----------------"<<std::endl;  
     Sleep(300);
 }
-bool Player::isAlive(){
+bool Player::isAlive(){         // -------------------------Checking if player is alive or not -------------------------
     return this->hp > 0;
 }
-int Player::getDamage(){
+int Player::getDamage(){        // -----------------------Getting the damage to enemy----------------------------------
     return this->damage;
 }
-void Player::takeDamage(int damage){
+void Player::takeDamage(int damage){        // Taking the damage from enemy
     this->hp -=damage;
     if (this->hp < 0)
     {
@@ -51,7 +54,7 @@ void Player::takeDamage(int damage){
 int Player::getHp(){
     return this->hp;
 }
-void Player::heal(int amount){
+void Player::heal(int amount){      //---------Option 2 between the battle to heal options-------------------------
     int originalHp = this->hp;      // Remember the hp before healing;
     //add the heal amount;
     this->hp += amount;
@@ -68,7 +71,7 @@ void Player::heal(int amount){
     std::cout<<" Current HP! "<< this->hp <<"/"<<this->hpMax<<std::endl;
     Sleep(100);
 }
-void Player::gainExp(int exp){
+void Player::gainExp(int exp){      // --------------------------------Gainign Experties while killing enemies-------------------
     this->exp +=exp;
     std::cout<<" You gained "<< exp <<" XP!"<<std::endl;
     // level up check;
@@ -125,7 +128,7 @@ void Player::gainExp(int exp){
         std::cin.get();
     }
 }
-int Player::getLevel() {
+int Player::getLevel() { //----------------------------leveling up the player-----------------
     return this->level;
 }
 int Player::getGold(){
@@ -153,4 +156,67 @@ void Player::upgradeStat(int hp, int dmg){
     std::cout<<" UGRADE SUCCESSFUL!"<<std::endl;
     std::cout<<"New Max HP: "<< this->hpMax <<" | New Damage: "<< this->damage <<std::endl;
     Sleep(1000);
+}
+int Player::getPotions(){
+    return this->potions;
+}
+void Player::gainPotion(int amount){
+    this->potions += amount;
+}
+void Player::consumePotion(){
+    this->potions--;
+}
+//-------We need to write the character's stats to a text file so user can come back tomorrow and continue the adventure--------
+void Player::saveCharacter(){
+    std::cout<<"Saving game data"<<std::endl;
+    Sleep(500);
+    std::ofstream outFile("save.txt");      //'ofstream' = output file system;
+    if (outFile.is_open())
+    {
+        // Write the data in specific order;
+        outFile<<this->name<<"\n";
+        outFile<<this->level<<"\n";
+        outFile<<this->exp<<"\n";
+        outFile<<this->expNext<<"\n";
+        outFile<<this->hp<<"\n";
+        outFile<<this->hpMax<<"\n";
+        outFile<<this->damage<<"\n";
+        outFile<<this->gold<<"\n";
+        outFile<<this->potions<<"\n";
+        outFile.close();
+        Sleep(300);
+        std::cout<<"Game saved successfully"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"Could not save the game."<<std::endl;
+    }  
+}
+void Player::loadCharacter(){
+    std::cout<<"Searching for save files...."<<std::endl;
+    Sleep(500);
+    std::ifstream inFile("save.txt");       // 'ifstream' means Input File System
+    if (inFile.is_open())
+    {
+        // We must read in exact order as we wrote;
+        std::string line;
+        inFile>>this->name;
+        inFile>>this->level;
+        inFile>>this->exp;
+        inFile>>this->expNext;
+        inFile>>this->hp;
+        inFile>>this->hpMax;
+        inFile>>this->damage;
+        inFile>>this->gold;
+        inFile>>this->potions;
+
+        inFile.close();
+        Sleep(300);
+        std::cout<<"Game Loaded! Welcome Back, "<< this->name <<std::endl;
+    }
+    else
+    {
+        Sleep(300);
+        std::cout<<"No Saved File found!!!!"<<std::endl;
+    }
 }

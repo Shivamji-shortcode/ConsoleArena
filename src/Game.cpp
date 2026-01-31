@@ -30,6 +30,10 @@ void Game::mainMenu() {
     Sleep(100);
     std::cout << "6. Show Player's Stats" << std::endl;
     Sleep(100);
+    std::cout<<"7. Save Game"<<std::endl;
+    Sleep(100);
+    std::cout<<"8. Load Game"<<std::endl;
+    Sleep(100);
     std::cout << "0. Exit" << std::endl;
     Sleep(100);
     std::cout << "Choice: ";
@@ -77,10 +81,30 @@ void Game::mainMenu() {
                 break;
             }
         case 2: // <--- New Logic for Spawning
-            this->spawnEnemies(3); // Adds 3 enemies to the vector
+            if (this->player != nullptr)
+            {
+                this->spawnEnemies(3);
+            }
+            else
+            {
+                std::cout<<"\n[!] System Error: No Player Found."<<std::endl;
+                std::cout<<" -> Plaese Select option 1 (Cretae New)"<<std::endl;
+                std::cout<<"-> OR Select Option 8 (load Game) to load previous character if you had played."<<std::endl;
+                Sleep(3000);
+            }
             break;
         case 3: // <--- New Logic for Printing
-            this->printEnemies(); // Loops through vector and prints stats
+            if (this->player != nullptr)
+            {
+                this->printEnemies();
+            }
+            else
+            {
+                std::cout<<"\n[!] System Error: No Player Found."<<std::endl;
+                std::cout<<" -> Plaese Select option 1 (Cretae New)"<<std::endl;
+                std::cout<<"-> OR Select Option 8 (load Game) to load previous character if you had played."<<std::endl;
+                Sleep(3000);
+            }            
             break;
         case 4: // Fight logic
             //security check that if the player rellly exist that user created the palyer or not if not he shloud create the player first;
@@ -106,7 +130,7 @@ void Game::mainMenu() {
                 std::cout<<" No Enemies too fight! spawn them first. "<<std::endl;
             }
             break;
-        case 5:     // ----------------------------------------------Shop Menu--------------------------------------------------
+        case 5:     // ----------------------------------------------Go to Shop Menu--------------------------------------------------
             if (this->player == nullptr)
             {
                 std::cout<<"Create a Character First! "<<std::endl;     
@@ -115,6 +139,27 @@ void Game::mainMenu() {
             {
                 this->shopMenu();   // Jump to the shop menu;
             }
+            break;
+        case 7:
+            if (this->player != nullptr)
+            {
+                this->player->saveCharacter();
+                Sleep(1000);        // Wait 1 sec so user can see Saved Successfully;
+            }
+            else
+            {
+                std::cout<<"Cretae a Character first!!"<<std::endl;
+                Sleep(1000);
+            }
+            break;
+        case 8:
+            // If we dont have a player yet create a temporary one so we can use the load function
+            if (this->player == nullptr)
+            {
+                this->player = new Player("Temp");
+            }
+            this->player->loadCharacter();
+            Sleep(1000);
             break;
         default:
             break;
@@ -168,32 +213,42 @@ void Game::combat(Enemy& enemy){
         //Switch case 
         switch (Choice)
         {
-        case 1:
-        {
-            //attack
-            int damage = this->player->getDamage();
-            if ((rand() % 100) < 20)
+            case 1:
             {
-                damage =    damage*2;
-                std::cout<<"Critical hit";
+                //attack
+                int damage = this->player->getDamage();
+                if ((rand() % 100) < 20)
+                {
+                    damage =    damage*2;
+                    std::cout<<"Critical hit";
+                    Sleep(200);
+                }
+                // Apply the potentially doubled damge
+                enemy.takeDamage(damage);
                 Sleep(200);
-            }
-            // Apply the potentially doubled damge
-            enemy.takeDamage(damage);
-            Sleep(200);
-            break;
-        }           
-        case 2:
-        {
-            // heal
-            //rand()%21 geerates 0-20. + 10 makes it 10-30;
-            int healAmount = rand() % 21 + 10;
-            this->player->heal(healAmount);
-            Sleep(500);
-            break;
-        }    
-        default:
-            break;
+                break;
+            }           
+            case 2:
+            {
+                // heal
+                // Check If we have enought potions first;
+                if (this->player->getPotions() > 0)
+                {
+                    this->player->consumePotion(); // removes One potions;
+                    int healAmount = rand() % 21 + 10;
+                    this->player->heal(healAmount);
+                    std::cout<<"You Used a Potion. ("<< this->player->getPotions()<< " left)"<<std::endl;
+                }
+                else
+                {
+                    std::cout<<"You reached your bag... but you have No Potions! "<<std::endl;
+                    std::cout<<"You wasted your turn looking for one! "<<std::endl;
+                }
+                Sleep(500);
+                break;
+            }    
+            default:
+                break;
         }
         // Enemy turn(counter- attack)
         if (enemy.isAlive())
@@ -242,6 +297,7 @@ void Game::combat(Enemy& enemy){
         Sleep(100);
     }
 }
+// ----------------------------------------------------SHOP MENU --------------------------------------------------------------------------
 void Game::shopMenu(){
     bool shopping = true;
     while (shopping)
@@ -258,7 +314,9 @@ void Game::shopMenu(){
         Sleep(100);
         std::cout<<"3. Buy Heavy Armor (+10 Hp) - (50 Gold)"<<std::endl;
         Sleep(100);
-        std::cout<<"4. Leave Shop. "<<std::endl;
+        std::cout<<"4. Buy Health Potions - 20 Gold "<<std::endl;
+        Sleep(50);
+        std::cout<<"5. Leave Shop"<<std::endl;
         Sleep(50);
         std::cout<<"Chooice: ";
         int choice;
@@ -271,8 +329,8 @@ void Game::shopMenu(){
             if (this->player->getGold() >= 10)
             {
                 this->player->payGold(10);
-                this->player->healMax();    // we need to addd this function in the player class ------------------
-                Sleep(1000);
+                this->player->healMax();    
+                Sleep(2000);
             }
             break;
         case 2:     // Damage upgrade 
@@ -280,7 +338,7 @@ void Game::shopMenu(){
             {
                 this->player->payGold(50);
                 // We need a way to upgrade stats directly;
-                this->player->upgradeStat(0, 2);       // We also need to add this function ---------------
+                this->player->upgradeStat(0, 2);       
                 Sleep(1000);
             }
             else
@@ -302,7 +360,20 @@ void Game::shopMenu(){
                 Sleep(1000);
             }
             break;
-        case 4:     //Exit
+        case 4:  //-----------------------Potion Buy options---------------------------
+            if (this->player->getGold() >= 20)
+            {
+                this->player->payGold(20);
+                this->player->gainPotion(1);
+                std::cout<<"You Bought a potion! "<<std::endl;
+                Sleep(1000);
+            }
+            else
+            {
+                std::cout<<"Not Enought Gold! earn more gold first"<<std::endl;
+            }
+            break;
+        case 5:     //Exit
             shopping = false;
             std::cout<<"Come Back Soon...."<<std::endl;
             Sleep(800);
