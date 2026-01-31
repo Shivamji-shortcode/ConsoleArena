@@ -109,21 +109,26 @@ void Player::gainExp(int exp){      // --------------------------------Gainign E
         {
             this->damage += 5;
             std::cout<<"Nice Choice, You feel Stronger got, +5 damages! Yahoooooo!"<<std::endl;
+            Sleep(100);
         }
         else if (choice == 2)
         {
             this->hpMax += 20;
             std::cout<<"Woww, You feel Stronger and tougher got +20 max Hp, Yahooooo!"<<std::endl;
+            Sleep(100);
         }
         else
         {
             std::cout<<"Not bad, You chhose to Just heal up.hahahahaha!"<<std::endl;
+            Sleep(100);
         }
         // Always heal up the full on next level or level up;
         this->hp = this->hpMax;
         std::cout<<"-> Healt Fully Recovered to "<<hpMax<<" !"<<std::endl;
+        Sleep(100);
         // Pause so you can actually see the result;
         std::cout<<"Press enter to continue! "<<std::endl;
+        Sleep(100);
         std::cin.ignore();
         std::cin.get();
     }

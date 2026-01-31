@@ -55,31 +55,33 @@ void Game::mainMenu() {
             }
             else
             {
-                std::cout<<"Create a Player first! "<<std::endl;
+                std::cout<<"\n[!] System Error: No Stats Availble."<<std::endl;
+                std::cout<<" -> Plaese Select option 1 (Cretae New)"<<std::endl;
+                std::cout<<"-> OR Select Option 8 (load Game) to load previous character if you had played."<<std::endl;
+                Sleep(3000);
             }
             break;
         }
-            case 1:
-            {
-                // Ask for name
-                std::cout << "Enter Name: ";
-                std::string name;
-                std::cin >> name;
-                // DYNAMIC ALLOCATION: Create the player on the Heap
-                if (this->player != nullptr) { 
-                    delete this->player; // Safety: delete old player if one exists
-                }
-                this->player = new Player(name);
-                // -----------------------------------------Cinematic  Delays Windows version-----------------------------------------//
-                std::cout<<"\n Creating Character!!!!!!....."<<std::endl;
-                Sleep(1000);
-                std::cout<<"Loading world asset...."<<std::endl;
-                Sleep(1000);
-                std::cout<<"Welcome, "<< name<<"! "  <<std::endl;
-                // Prove it worked
-                this->player->printStats();
-                break;
-            }
+        case 1:{
+             // Ask for name
+             std::cout << "Enter Name: ";
+             std::string name;
+             std::cin >> name;
+             // DYNAMIC ALLOCATION: Create the player on the Heap
+             if (this->player != nullptr) { 
+                 delete this->player; // Safety: delete old player if one exists
+             }
+             this->player = new Player(name);
+             // -----------------------------------------Cinematic  Delays Windows version-----------------------------------------//
+             std::cout<<"\n Creating Character!!!!!!....."<<std::endl;
+             Sleep(1000);
+             std::cout<<"Loading world asset...."<<std::endl;
+             Sleep(1000);
+             std::cout<<"Welcome, "<< name<<"! "  <<std::endl;
+             // Prove it worked
+             this->player->printStats();
+             break;
+        }
         case 2: // <--- New Logic for Spawning
             if (this->player != nullptr)
             {
@@ -107,37 +109,52 @@ void Game::mainMenu() {
             }            
             break;
         case 4: // Fight logic
-            //security check that if the player rellly exist that user created the palyer or not if not he shloud create the player first;
-            if (this->player == nullptr)
+        {
+            // 1. SAFETY CHECK: Does the player exist?
+            if (this->player != nullptr)
             {
-                std::cout<<" Error! You must create player first(Option 1), because you have not created one"<<std::endl;
-            }
-            
-            // Check if there are enemies left to fight
-            if (!this->enemies.empty())
-            {
-                //Fight the first enemy(Index 0)
-                this->combat(this->enemies[0]);
-                // if the we just fought is dead
-                if (!this->enemies[0].isAlive())
+                // Player exists, so proceed with fight logic
+
+                // Check if there are enemies left to fight
+                if (!this->enemies.empty())
                 {
-                    this->enemies.erase(this->enemies.begin());
-                    std::cout<<"The enemy has been removed from the list."<<std::endl;
+                    // Fight the first enemy (Index 0)
+                    this->combat(this->enemies[0]);
+
+                    // If the enemy we just fought is dead, remove them
+                    if (!this->enemies[0].isAlive())
+                    {
+                        this->enemies.erase(this->enemies.begin());
+                        std::cout << "The enemy has been removed from the list." << std::endl;
+                    }
+                }
+                else
+                {
+                    std::cout << "No Enemies to fight! Spawn them first (Option 2)." << std::endl;
+                    Sleep(1000);
                 }
             }
             else
             {
-                std::cout<<" No Enemies too fight! spawn them first. "<<std::endl;
+                // Player is NULL -> Print Error & Suggest Load/Create
+                std::cout << "\n[!] System Error: You cannot fight without a body!" << std::endl;
+                std::cout << "   -> Please select Option 1 (Create New)" << std::endl;
+                std::cout << "   -> OR select Option 8 (Load Game)" << std::endl;
+                Sleep(2000);
             }
             break;
+        }
         case 5:     // ----------------------------------------------Go to Shop Menu--------------------------------------------------
-            if (this->player == nullptr)
+            if (this->player != nullptr)
             {
-                std::cout<<"Create a Character First! "<<std::endl;     
+                this->shopMenu();
             }
             else
             {
-                this->shopMenu();   // Jump to the shop menu;
+                std::cout<<"\n[!] Shopkeeper: No Player Found,'I don't Serve Ghost!'."<<std::endl;
+                std::cout<<" -> Plaese Select option 1 (Cretae New)"<<std::endl;
+                std::cout<<"-> OR Select Option 8 (load Game) to load previous character if you had played."<<std::endl;
+                Sleep(3000);
             }
             break;
         case 7:
@@ -148,8 +165,10 @@ void Game::mainMenu() {
             }
             else
             {
-                std::cout<<"Cretae a Character first!!"<<std::endl;
-                Sleep(1000);
+                std::cout<<"\n[!] System Error: Nothing to Save."<<std::endl;
+                std::cout<<" -> Plaese Select option 1 (Cretae New)"<<std::endl;
+                std::cout<<"-> OR Select Option 8 (load Game) to load previous character if you had played."<<std::endl;
+                Sleep(3000);
             }
             break;
         case 8:
@@ -271,15 +290,17 @@ void Game::combat(Enemy& enemy){
             if(!this->player->isAlive())
             {
                 std::cout<<"You collapsed from the damage! "<<std::endl;
+                Sleep(3000);
                 break;
             } 
         }   
     }
     if (this->player->isAlive())
     {
+        Sleep(2000);
         std::cout<<"\n---VICTORY---"<<std::endl;
         std::cout<<"You defeated the "<<enemy.getStatus()<<" enemy!"<<std::endl;
-        Sleep(100);
+        Sleep(2000);
         // --- Reward the player --- //
         this->player->gainExp(40);
         // Gold Reward (Random 10-20 gold per kill)
