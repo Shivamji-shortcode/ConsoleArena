@@ -63,14 +63,27 @@ void Game::mainMenu() {
             break;
         }
         case 1:{
+            if (this->player != nullptr)
+            {
+                std::cout<<"\n[!] WARNING: A character is already exists!"<<std::endl;
+                std::cout<<" Creating a new  character will DELETE your current progress. "<<std::endl;
+                std::cout<<" Are you sure type Y- for Yes and N- for No"<<std::endl;
+                char confirm;
+                std::cin>>confirm;
+                
+                if (confirm == 'n' || confirm == 'N')
+                {
+                    std::cout<<"Cancelled! Returning to main Menu...."<<std::endl;
+                    Sleep(1000);
+                    break;
+                }
+                // If they typed 'y' we proceed to delete the old one
+                delete this->player;
+            }
              // Ask for name
              std::cout << "Enter Name: ";
              std::string name;
              std::cin >> name;
-             // DYNAMIC ALLOCATION: Create the player on the Heap
-             if (this->player != nullptr) { 
-                 delete this->player; // Safety: delete old player if one exists
-             }
              this->player = new Player(name);
              // -----------------------------------------Cinematic  Delays Windows version-----------------------------------------//
              std::cout<<"\n Creating Character!!!!!!....."<<std::endl;
@@ -78,8 +91,12 @@ void Game::mainMenu() {
              std::cout<<"Loading world asset...."<<std::endl;
              Sleep(1000);
              std::cout<<"Welcome, "<< name<<"! "  <<std::endl;
-             // Prove it worked
              this->player->printStats();
+             // Prove it worked
+             // Wait for user to to read stats;
+             std::cout<<"\n Press Enter to Continue..."<<std::endl;
+             std::cin.ignore();
+             std::cin.get();
              break;
         }
         case 2: // <--- New Logic for Spawning
