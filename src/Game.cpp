@@ -69,8 +69,7 @@ void Game::mainMenu() {
                 std::cout<<" Creating a new  character will DELETE your current progress. "<<std::endl;
                 std::cout<<" Are you sure type Y- for Yes and N- for No"<<std::endl;
                 char confirm;
-                std::cin>>confirm;
-                
+                std::cin>>confirm;                
                 if (confirm == 'n' || confirm == 'N')
                 {
                     std::cout<<"Cancelled! Returning to main Menu...."<<std::endl;
