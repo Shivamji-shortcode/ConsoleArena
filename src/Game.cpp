@@ -39,15 +39,63 @@ void Game::mainMenu() {
     std::cout << "Choice: ";
     Sleep(100);
 
-    int choice;
-    std::cin >> choice;
+    // int choice;
+    // std::cin >> choice;
+    std::string rawInput;
+    std::cin>>rawInput;
     Sleep(300);
+    bool isNumber = true;
+    //for loop to ASCII check: to every sigle character typed;
+    for (int i = 0; i < rawInput.length(); i++)
+    {
+        // If the ASCII value is less than thenn 48(0) and the greater than the 57(9)
+        if (rawInput[i] < 48 || rawInput[i] > 57)
+        {
+            isNumber = false;
+            break;  // Stop the checking we found the bad symbol/lettter;
+        }
+    }
+    // if they typed the wrong alphabet or the symbol blockk them and restart the menu;
+    if (isNumber == false)
+    {
+        std::cout<<"\n[!] INPUT ERROR : You hit wrong button"<<std::endl;
+        Sleep(100);
+        std::cout<<"    Please type a valid Number that are given in the menu, No letters and the symbols."<<std::endl;
+        Sleep(1500);
+        return;
+    }
+    // If we survive the loop, convert the string to an integer;
+    int choice = std::stoi(rawInput);
+    
 
     switch (choice) {
         case 0:
-            this->playing = false;
+        {
+            // this->playing = false;
+            // Sleep(100);
+            // break;
+            //New exit warning updated code for the global crash;
+            std::cout<<"\n[!] WARNING: Did you remember to Save (Option 7)?"<<std::endl;
+            Sleep(50);
+            std::cout<<"    Any unsaved changes or progress will be lost forever in the void."<<std::endl;
+            Sleep(50);
+            std::cout<<"    Are you SURE you want to quit? (Type Y/y for Yes or N/n for No):"<<std::endl;
+            Sleep(50);
+            std::string confirmRaw;
+            std::cin>>confirmRaw;
+            if (confirmRaw[0] == 'Y' || confirmRaw[0] == 'y')
+            {
+                std::cout<<"Shutting down the game......Goodbye!"<<std::endl;
+                Sleep(500);
+                this->playing = false; // Actually quit the game;
+            }
+            else
+            {
+                std::cout<<"Phew! That was close. Returning to main menu...."<<std::endl;
+            }
             Sleep(100);
             break;
+        }    
         case 6:{        // Show staes;
             if (this->player != nullptr)
             {
@@ -69,7 +117,8 @@ void Game::mainMenu() {
                 std::cout<<" Creating a new  character will DELETE your current progress. "<<std::endl;
                 std::cout<<" Are you sure type Y- for Yes and N- for No"<<std::endl;
                 char confirm;
-                std::cin>>confirm;                
+                std::cin>>confirm;
+
                 if (confirm == 'n' || confirm == 'N')
                 {
                     std::cout<<"Cancelled! Returning to main Menu...."<<std::endl;
