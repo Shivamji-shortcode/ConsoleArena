@@ -225,3 +225,6 @@ void Player::loadCharacter(){
         std::cout<<"No Saved File found!!!!"<<std::endl;
     }
 }
+// void Player::healMax(){
+//     this->hp = this->hpMax;
+// }

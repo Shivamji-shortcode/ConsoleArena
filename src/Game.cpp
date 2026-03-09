@@ -65,9 +65,12 @@ void Game::mainMenu() {
         return;
     }
     // If we survive the loop, convert the string to an integer;
-    int choice = std::stoi(rawInput);
+    int choice = -1;
+    if (isNumber && !rawInput.empty())
+    {
+        choice = std::stoi(rawInput);
+    }
     
-
     switch (choice) {
         case 0:
         {
@@ -290,10 +293,30 @@ void Game::combat(Enemy& enemy){
         Sleep(50);
         std::cout<<"2. Heal" <<std::endl;
         Sleep(50);
-        std::cout<<"Choice: ";
-        int Choice;
-        std::cin>>Choice;
+        // std::cout<<"Choice: ";
+        // int Choice;
+        // std::cin>>Choice;
+        // Sleep(200);
+        // New combat  Input Safety.
+        std::string rawInput;
+        std::cin>>rawInput;
         Sleep(200);
+        bool isNumber = true;
+        for (int i = 0; i < rawInput.length(); i++)
+        {
+            if (rawInput[i] < 48 || rawInput[i] > 57)
+            {
+                isNumber = false;
+                break;
+            }
+        }
+        int Choice = -1;
+        if (isNumber && !rawInput.empty())
+        {
+            Choice = std::stoi(rawInput);
+        }
+        
+        
         //Switch case 
         switch (Choice)
         {
@@ -332,12 +355,16 @@ void Game::combat(Enemy& enemy){
                 break;
             }    
             default:
+                std::cout<<"You fumbled your weapen by pressing the wrong button!"<<std::endl;
+                Sleep(200);
+                std::cout<<"You lost your control and wasted your turn to attack on enemy!"<<std::endl;
+                Sleep(500);
                 break;
         }
         // Enemy turn(counter- attack)
         if (enemy.isAlive())
         {
-            // Pause for the Suspese before the enemy attackks;
+            // Pause for the Suspense before the enemy attackks;
             std::cout<<"\n Enemy is preapring to attack......."<<std::endl;
             Sleep(200);
             std::cout<<"Enemy attacks back! "<<std::endl;
@@ -376,11 +403,30 @@ void Game::combat(Enemy& enemy){
     }
     else
     {
+        // Sleep(100);
+        // std::cout<<"\n----Game over----"<<std::endl;
+        // Sleep(100);
+        // std::cout<<"You have lost the battle...."<<std::endl;
+        // Sleep(100);
+        // -------------New update Death penality-----------------------
         Sleep(100);
-        std::cout<<"\n----Game over----"<<std::endl;
-        Sleep(100);
-        std::cout<<"You have lost the battle...."<<std::endl;
-        Sleep(100);
+        std::cout<<"\n---- CRITICAL INJURY DETECTED-----"<<std::endl;
+        Sleep(1500);
+        std::cout<<"You fall to your knees, Unable to fight."<<std::endl;
+        Sleep(2000);
+        int goldLost = this->player->getGold() / 2; // calculate half of their gold;
+        std::cout<<"\nSuddenly, the Adventure's guild Emergency Extraction Team drops in!.."<<std::endl;
+        Sleep(2000);
+        std::cout<<"They throw the smoke bomb, grab your body, and rush you back to the medical ward!.."<<std::endl;
+        // Remove the gold and heal the player so they aren't a zombie.
+        this->player->payGold(goldLost);
+        this->player->healMax();
+        Sleep(2000);
+        std::cout<<"The Guild automatically deducts "<<goldLost <<" Gold from your pocket to cover the rescue fee."<<std::endl;
+        Sleep(1500);
+        std::cout<<"You wake up at the Inn, fully healed but much poorer."<<std::endl;
+        std::cout<<"-------------------\n"<<std::endl;
+        Sleep(2000);
     }
 }
 // ----------------------------------------------------SHOP MENU --------------------------------------------------------------------------
