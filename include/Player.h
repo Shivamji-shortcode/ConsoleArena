@@ -41,7 +41,7 @@ class Player{
     void gainPotion(int amount);
     void consumePotion();
     void saveCharacter();
-    void loadCharacter();
+    bool loadCharacter();
     // void healMax();
 
 };

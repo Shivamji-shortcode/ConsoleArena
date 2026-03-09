@@ -6,6 +6,7 @@ Game::Game(){
 
     this->playing = true;
     this->player = nullptr;
+    this->unsavedChanges = false;
 }
 Game::~Game(){
     //Free the memory if player exists
@@ -78,23 +79,34 @@ void Game::mainMenu() {
             // Sleep(100);
             // break;
             //New exit warning updated code for the global crash;
-            std::cout<<"\n[!] WARNING: Did you remember to Save (Option 7)?"<<std::endl;
-            Sleep(50);
-            std::cout<<"    Any unsaved changes or progress will be lost forever in the void."<<std::endl;
-            Sleep(50);
-            std::cout<<"    Are you SURE you want to quit? (Type Y/y for Yes or N/n for No):"<<std::endl;
-            Sleep(50);
-            std::string confirmRaw;
-            std::cin>>confirmRaw;
-            if (confirmRaw[0] == 'Y' || confirmRaw[0] == 'y')
-            {
-                std::cout<<"Shutting down the game......Goodbye!"<<std::endl;
-                Sleep(500);
-                this->playing = false; // Actually quit the game;
+            if(this->player != nullptr && this->unsavedChanges == true){
+                std::cout<<"\n[!] WARNING: Did you remember to Save (Option 7)?"<<std::endl;
+                Sleep(50);
+                std::cout<<"    Any unsaved changes or progress will be lost forever in the void."<<std::endl;
+                Sleep(50);
+                std::cout<<"    Are you SURE you want to quit? (Type Y/y for Yes or N/n for No):"<<std::endl;
+                Sleep(50);
+                std::string confirmRaw;
+                std::cin>>confirmRaw;
+                if (confirmRaw[0] == 'Y' || confirmRaw[0] == 'y')
+                {
+                    std::cout<<"Shutting down the game......Goodbye!"<<std::endl;
+                    Sleep(500);
+                    this->playing = false; // Actually quit the game;
+                }
+                else
+                {
+                    std::cout<<"Phew! That was close. Returning to main menu...."<<std::endl;
+                    Sleep(1000);
+                    std::cout<<"Now Save the Game first by pressing the option 7....."<<std::endl;
+                }
             }
             else
             {
-                std::cout<<"Phew! That was close. Returning to main menu...."<<std::endl;
+                // If the game is clean or no player exist , exit instantly!
+                std::cout<<"Shutting down the game......Goodbye!"<<std::endl;
+                Sleep(500);
+                this->playing = false;
             }
             Sleep(100);
             break;
@@ -148,6 +160,7 @@ void Game::mainMenu() {
              std::cout<<"\n Press Enter to Continue..."<<std::endl;
              std::cin.ignore();
              std::cin.get();
+             this->unsavedChanges = true;
              break;
         }
         case 2: // <--- New Logic for Spawning
@@ -210,6 +223,7 @@ void Game::mainMenu() {
                 std::cout << "   -> OR select Option 8 (Load Game)" << std::endl;
                 Sleep(2000);
             }
+            this->unsavedChanges = true;
             break;
         }
         case 5:     // ----------------------------------------------Go to Shop Menu--------------------------------------------------
@@ -224,11 +238,13 @@ void Game::mainMenu() {
                 std::cout<<"-> OR Select Option 8 (load Game) to load previous character if you had played."<<std::endl;
                 Sleep(3000);
             }
+            this->unsavedChanges = true;
             break;
         case 7:
             if (this->player != nullptr)
             {
                 this->player->saveCharacter();
+                this->unsavedChanges = false;
                 Sleep(1000);        // Wait 1 sec so user can see Saved Successfully;
             }
             else
@@ -240,15 +256,49 @@ void Game::mainMenu() {
             }
             break;
         case 8:
-            // If we dont have a player yet create a temporary one so we can use the load function
-            if (this->player == nullptr)
+            //     // If we dont have a player yet create a temporary one so we can use the load function
+            //     if (this->player == nullptr)
+            //     {
+            //         this->player = new Player("Temp");
+            //     }
+            //     this->player->loadCharacter();
+            //     Sleep(1000);
+            //     break;
+            //     default:
+            //     break;
+            //--------------Above this this is only for one player game so now we are moving for the multiplayer---------
+            std::cout<<"\n---Player Login---"<<std::endl;
+            Sleep(100);
+            std::cout<<"Enter your character's name to load: "<<std::endl;
+            std::string loginName;
+            std::cin>>loginName;
+            Sleep(200);
+            // If somone is already playing and other tries to login, then auto save previous data and load current and free the memory for loading the game
+            if (this->player != nullptr)
             {
-                this->player = new Player("Temp");
+                std::cout<<"\n Autosaving the current progress before logging out..."<<std::endl;
+                Sleep(500);
+                this->player->saveCharacter();
+                delete this->player;
             }
-            this->player->loadCharacter();
+            // Create the brand new player using the name they just typed;
+            this->player = new Player(loginName);
+            // Try to load that specific file 
+            bool loadSuccess = this->player->loadCharacter();
+            if (loadSuccess == true)
+            {
+                //It worked! The game is clean
+                this->unsavedChanges = false;
+            }
+            else
+            {
+                //The bug fix  did not exist!
+                // delete the ghost character and set the pointer back to null;
+                delete this->player;
+                this->player = nullptr;
+                std::cout<<"-> Please Create a New Player (Option 1) first."<<std::endl;
+            }
             Sleep(1000);
-            break;
-        default:
             break;
     }
 }

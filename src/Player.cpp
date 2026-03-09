@@ -173,37 +173,92 @@ void Player::consumePotion(){
 }
 //-------We need to write the character's stats to a text file so user can come back tomorrow and continue the adventure--------
 void Player::saveCharacter(){
-    std::cout<<"Saving game data"<<std::endl;
-    Sleep(500);
-    std::ofstream outFile("save.txt");      //'ofstream' = output file system;
+    // std::cout<<"Saving game data"<<std::endl;
+    // Sleep(500);
+    // std::ofstream outFile("save.txt");      //'ofstream' = output file system;
+    // if (outFile.is_open())
+    // {
+    //     // Write the data in specific order;
+    //     outFile<<this->name<<"\n";
+    //     outFile<<this->level<<"\n";
+    //     outFile<<this->exp<<"\n";
+    //     outFile<<this->expNext<<"\n";
+    //     outFile<<this->hp<<"\n";
+    //     outFile<<this->hpMax<<"\n";
+    //     outFile<<this->damage<<"\n";
+    //     outFile<<this->gold<<"\n";
+    //     outFile<<this->potions<<"\n";
+    //     outFile.close();
+    //     Sleep(300);
+    //     std::cout<<"Game saved successfully"<<std::endl;
+    // }
+    // else
+    // {
+    //     std::cout<<"Could not save the game."<<std::endl;
+    // }  
+    //-----------------------------------------New Dynamic File saving for the every new user-----------------------------//
+    //---New: Create a Unique file name with using the player name.
+    std::string fileName = this->name + "_save.txt";
+    std::cout<<"Saving the game data to "<<fileName <<"......"<<std::endl;
+    //Open the specific file instead of just save.txt.//
+    std::ofstream outFile(fileName);        // 'ofStream' = Output file stream;
     if (outFile.is_open())
     {
-        // Write the data in specific order;
-        outFile<<this->name<<"\n";
-        outFile<<this->level<<"\n";
-        outFile<<this->exp<<"\n";
-        outFile<<this->expNext<<"\n";
-        outFile<<this->hp<<"\n";
-        outFile<<this->hpMax<<"\n";
-        outFile<<this->damage<<"\n";
-        outFile<<this->gold<<"\n";
+        outFile<<this->name<<"\n";        
+        outFile<<this->level<<"\n";        
+        outFile<<this->exp<<"\n";        
+        outFile<<this->expNext<<"\n";        
+        outFile<<this->hp<<"\n";        
+        outFile<<this->hpMax<<"\n";        
+        outFile<<this->damage<<"\n";        
+        outFile<<this->gold<<"\n";        
         outFile<<this->potions<<"\n";
         outFile.close();
         Sleep(300);
-        std::cout<<"Game saved successfully"<<std::endl;
+        std::cout<<"Game Saved Successfully"<<std::endl;
     }
     else
     {
-        std::cout<<"Could not save the game."<<std::endl;
-    }  
+        std::cout<<"Couldn't Save the Game! Try again..."<<std::endl;
+    }
+     
 }
-void Player::loadCharacter(){
-    std::cout<<"Searching for save files...."<<std::endl;
+bool Player::loadCharacter(){
+    // std::cout<<"Searching for save files...."<<std::endl;
+    // Sleep(500);
+    // std::ifstream inFile("save.txt");       // 'ifstream' means Input File System
+    // if (inFile.is_open())
+    // {
+    //     // We must read in exact order as we wrote;
+    //     std::string line;
+    //     inFile>>this->name;
+    //     inFile>>this->level;
+    //     inFile>>this->exp;
+    //     inFile>>this->expNext;
+    //     inFile>>this->hp;
+    //     inFile>>this->hpMax;
+    //     inFile>>this->damage;
+    //     inFile>>this->gold;
+    //     inFile>>this->potions;
+
+    //     inFile.close();
+    //     Sleep(300);
+    //     std::cout<<"Game Loaded! Welcome Back, "<< this->name <<std::endl;
+    // }
+    // else
+    // {
+    //     Sleep(300);
+    //     std::cout<<"No Saved File found!!!!"<<std::endl;
+    // }
+    // -----------------------------New Functionalities--------------- for the mjultiplayer game loading----------------//
+    std::string fileName = this->name + "_save.txt";
+    std::cout<<"Searching for "<<fileName <<"....."<<std::endl;
     Sleep(500);
-    std::ifstream inFile("save.txt");       // 'ifstream' means Input File System
+    // Open the specific file instead of just save.txt
+    std::ifstream inFile(fileName);         // 'ifstream' = mean Inout File System;
     if (inFile.is_open())
     {
-        // We must read in exact order as we wrote;
+        // We must read in exact order as we wrote.
         std::string line;
         inFile>>this->name;
         inFile>>this->level;
@@ -217,14 +272,15 @@ void Player::loadCharacter(){
 
         inFile.close();
         Sleep(300);
-        std::cout<<"Game Loaded! Welcome Back, "<< this->name <<std::endl;
+        std::cout<<"Game Loaded! Welcome back, "<<this->name<<std::endl;
+        return true;    // New: tell the game it was a success;
     }
     else
     {
         Sleep(300);
-        std::cout<<"No Saved File found!!!!"<<std::endl;
+        std::cout<<"[!] No saved file found for '"<< this->name <<"'!!!!"<<std::endl;
+        return false;   // New: Tells the game failed to find file!
     }
+    
+    
 }
-// void Player::healMax(){
-//     this->hp = this->hpMax;
-// }

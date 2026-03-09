@@ -11,6 +11,7 @@ class Game{
     private:
         bool playing;
         Player* player;
+        bool unsavedChanges;
         std::vector<Enemy> enemies;    //<---- 3. The container for our enemies.
 
     public:
